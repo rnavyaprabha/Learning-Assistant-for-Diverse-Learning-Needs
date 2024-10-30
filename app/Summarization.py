@@ -45,6 +45,7 @@ def summarize_notes():
     # Summarize the content
     summary = summarize_text(notes_content)
     print("Summary:\n", summary)
+    return summary
 
 # Run the summarization when this file is executed
 if __name__ == "__main__":

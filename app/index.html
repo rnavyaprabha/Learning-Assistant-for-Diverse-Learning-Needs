@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Assistant</title>
+</head>
+<body>
+    <h1>Learning Assistant</h1>
+    <button id="transcribeButton">Transcribe Audio</button>
+    <button id="summarizeButton">Summarize</button>
+    <button id="translateButton">Translate</button>
+    <div id="transcriptionResult"></div>
+    <script>
+        document.getElementById("transcribeButton").onclick = async function() {
+            document.getElementById("transcriptionResult").innerText = "Transcribing...";
+            const response = await fetch('/transcribe', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById("transcriptionResult").innerText = data.transcription;
+        };
+
+        document.getElementById("summarizeButton").onclick = async function() {
+            document.getElementById("transcriptionResult").innerText = "Summarizing...";
+            const response = await fetch('/summarize', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById("transcriptionResult").innerText = data.summary;
+        };
+
+        document.getElementById("translateButton").onclick = async function() {
+            document.getElementById("transcriptionResult").innerText = "Translating...";
+            const response = await fetch('/translate', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById("transcriptionResult").innerText = data.translation;
+        };
+
+    </script>
+</body>
+</html>
