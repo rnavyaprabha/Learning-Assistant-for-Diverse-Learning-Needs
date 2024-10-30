@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Transcription</title>
+    <title>Learning Assistant</title>
 </head>
 <body>
     <h1>Learning Assistant</h1>
     <button id="transcribeButton">Transcribe Audio</button>
-    <button id="translateButton">Translate</button>
     <button id="summarizeButton">Summarize</button>
+    <button id="translateButton">Translate</button>
     <div id="transcriptionResult"></div>
-    <!-- <audio controls>
-        <source src="/audio" type="audio/wav">
-    </audio> -->
     <script>
         document.getElementById("transcribeButton").onclick = async function() {
             document.getElementById("transcriptionResult").innerText = "Transcribing...";
