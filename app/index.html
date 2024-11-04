@@ -4,35 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <h1>Learning Assistant</h1>
-    <button id="transcribeButton">Transcribe Audio</button>
-    <button id="summarizeButton">Summarize</button>
-    <button id="translateButton">Translate</button>
-    <div id="transcriptionResult"></div>
-    <script>
-        document.getElementById("transcribeButton").onclick = async function() {
-            document.getElementById("transcriptionResult").innerText = "Transcribing...";
-            const response = await fetch('/transcribe', { method: 'POST' });
-            const data = await response.json();
-            document.getElementById("transcriptionResult").innerText = data.transcription;
-        };
 
-        document.getElementById("summarizeButton").onclick = async function() {
-            document.getElementById("transcriptionResult").innerText = "Summarizing...";
-            const response = await fetch('/summarize', { method: 'POST' });
-            const data = await response.json();
-            document.getElementById("transcriptionResult").innerText = data.summary;
-        };
+    <div class="recording-container">
+        <button id="startRecordingButton">Start Recording</button>
+    </div>
 
-        document.getElementById("translateButton").onclick = async function() {
-            document.getElementById("transcriptionResult").innerText = "Translating...";
-            const response = await fetch('/translate', { method: 'POST' });
-            const data = await response.json();
-            document.getElementById("transcriptionResult").innerText = data.translation;
-        };
 
-    </script>
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('transcribeTab')">Transcribe</div>
+        <div class="tab" onclick="showTab('summarizeTab')">Summary</div>
+        <div class="tab" onclick="showTab('translateTab')">Translation</div>
+    </div>
+
+    <div id="transcribeTab" class="result-container" style="display: block;">
+        <h3>Transcription Result:</h3>
+        <p class="result" id="transcriptionText">No transcription yet.</p>
+    </div>
+    
+    <div id="summarizeTab" class="result-container">
+        <button class="action-button" id="summarizeButton">Summarize Text</button>
+        <h3>Summarization Result:</h3>
+        <p class="result" id="summarizationText">No summary yet.</p>
+    </div>
+    
+    <div id="translateTab" class="result-container">
+        <button class="action-button" id="translateButton" disabled>Translate Text</button>
+        <h3>Translation Result:</h3>
+        <p class="result" id="translationText">No translation yet.</p>
+    </div>
+
+    <script src="/static/scripts.js"></script>
 </body>
 </html>
