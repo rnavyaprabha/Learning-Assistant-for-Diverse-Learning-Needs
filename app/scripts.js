@@ -1,87 +1,82 @@
-let isRecording = false; // Track the recording state
-let transcription = ''; // Store the transcription text
+// Global state and selectors
+let isRecording = false; 
+let transcription = '';
+const transcriptionTextEl = document.getElementById("transcriptionText");
+const summarizationTextEl = document.getElementById("summarizationText");
+const translationTextEl = document.getElementById("translationText");
+const startRecordingButton = document.getElementById("startRecordingButton");
 
-// Initialize SpeechRecognition for transcription
+// SpeechRecognition Setup
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.interimResults = true; // Get interim results for live feedback
-recognition.lang = 'en-US'; // Set the language
-recognition.continuous = true; // Enable continuous speech recognition
+recognition.interimResults = true;
+recognition.lang = 'en-US';
+recognition.continuous = true;
 
+function startTranscription() {
+    recognition.start();
+    startRecordingButton.innerText = "Stop Recording";
+    startRecordingButton.style.backgroundColor = "#dc3545";
+    isRecording = true;
+}
+
+function stopTranscription() {
+    recognition.stop();
+    startRecordingButton.innerText = "Start Recording";
+    startRecordingButton.style.backgroundColor = "#28a745";
+    isRecording = false;
+}
+
+// Handle Transcription Result
 recognition.onresult = function(event) {
-    const transcript = Array.from(event.results)
-        .map(result => result[0])
-        .map(result => result.transcript)
+    transcription = Array.from(event.results)
+        .map(result => result[0].transcript)
         .join('');
-
-    transcription = transcript; // Store the transcription
-    document.getElementById("transcriptionText").innerText = transcript; // Display the transcription
+    transcriptionTextEl.innerText = transcription;
 };
 
 recognition.onstart = function() {
     console.log('Voice recognition started. Speak into the microphone.');
 };
 
+// Handle Errors
 recognition.onerror = function(event) {
-    console.error('Error occurred in recognition: ' + event.error);
+    console.error('Recognition Error:', event.error);
 };
 
 // Toggle recording on button click
-document.getElementById("startRecordingButton").onclick = function() {
-    if (isRecording) {
-        recognition.stop();
-        this.innerText = "Start Recording";
-        this.style.backgroundColor = "#28a745"; // Green for start
-        this.style.color = "white";
-        isRecording = false;
-    } else {
-        transcription = ''; // Clear previous transcription
-        recognition.start();
-        this.innerText = "Stop Recording";
-        this.style.backgroundColor = "#dc3545"; // Red for stop
-        this.style.color = "white";
-        isRecording = true;
-    }
+startRecordingButton.onclick = function() {
+    isRecording ? stopTranscription() : startTranscription();
 };
 
-// Show Tab function to switch between tabs without triggering actions
+// Switch Tabs
 function showTab(tabId) {
-    document.querySelectorAll('.result-container').forEach(tab => {
-        tab.style.display = 'none';
-    });
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
+    document.querySelectorAll('.result-container').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     document.getElementById(tabId).style.display = 'block';
     event.target.classList.add('active');
 }
 
-// Summarize Text on button click
-document.getElementById("summarizeButton").onclick = async function() {
+// Summarize and Translate Handlers
+async function summarizeText() {
     if (!transcription.trim()) {
-        document.getElementById("summarizationText").innerText = "No transcription available to summarize.";
+        summarizationTextEl.innerText = "No transcription available to summarize.";
         return;
     }
-    const data = await fetchData('/summarize', transcription, "Summarizing...");
-    document.getElementById("summarizationText").innerText = data.summary || "No summary available.";
-};
+    summarizationTextEl.innerText = await fetchData('/summarize', transcription, summarizationTextEl);
+}
 
-// Translate Text on button click
-document.getElementById("translateButton").onclick = async function() {
+async function translateText() {
     if (!transcription.trim()) {
-        document.getElementById("translationText").innerText = "No transcription available to translate.";
+        translationTextEl.innerText = "No transcription available to translate.";
         return;
     }
-    const data = await fetchData('/translate', transcription, "Translating...");
-    document.getElementById("translationText").innerText = data.translation || "No translation available.";
-};
+    translationTextEl.innerText = await fetchData('/translate', transcription, translationTextEl);
+}
 
 // Fetch data with loading indicator
-async function fetchData(url, text, loadingMessage) {
-    const resultId = url.includes('summarize') ? "summarizationText" : url.includes('translate') ? "translationText" : "transcriptionText";
-    const resultElement = document.getElementById(resultId);
+async function fetchData(url, text, resultElement) {
+    resultElement.innerText = url.includes('summarize') ? "Summarizing..." : "Translating...";
     resultElement.classList.add("loading");
-    resultElement.innerText = loadingMessage;
-
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -90,17 +85,54 @@ async function fetchData(url, text, loadingMessage) {
         });
         const data = await response.json();
         resultElement.classList.remove("loading");
-        return data;
+        return data.summary || data.translation || "No result available.";
     } catch (error) {
-        resultElement.innerText = "Error: " + error.message;
         resultElement.classList.remove("loading");
-        throw error;
+        console.error('Fetch Error:', error);
+        return `Error: ${error.message}`;
     }
 }
 
-// Attach click events to the tab elements to call showTab without triggering actions
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.onclick = function() {
+// Download text content
+function downloadText(elementId, filename) {
+    const text = document.getElementById(elementId).innerText;
+    if (!text || text.includes("No transcription") || text.includes("No summary")) {
+        alert("No content available for download.");
+        return;
+    }
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Upload text file and display in transcription result
+function uploadText() {
+    const fileInput = document.getElementById('uploadTextFile');
+    const file = fileInput.files[0];
+    if (file && file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const text = event.target.result;
+            transcription = text; // Update the global transcription variable
+            document.getElementById("transcriptionText").innerText = text; // Display text in transcription area
+        };
+        reader.onerror = function() {
+            alert("An error occurred while reading the file.");
+        };
+        reader.readAsText(file);
+    } else {
+        alert("Please upload a valid .txt file.");
+    }
+}
+
+
+// Event Listeners for summarize, translate and switch tab
+document.getElementById("summarizeButton").onclick = summarizeText;
+document.getElementById("translateButton").onclick = translateText;
+document.querySelectorAll('.tab').forEach(tab => tab.onclick = function() {
         showTab(this.getAttribute('onclick').split("'")[1]);
-    };
 });
