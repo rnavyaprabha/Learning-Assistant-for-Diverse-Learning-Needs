@@ -5,6 +5,7 @@ import asyncio
 import aiohttp
 import json
 from transformers import pipeline
+import torch
 
 # Initialize Whisper model for file transcription
 whisper_pipe = pipeline(
