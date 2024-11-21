@@ -1,6 +1,7 @@
 const summarizationTextEl = document.getElementById("summarizationText");
 const translationTextEl = document.getElementById("translationText");
 const transcriptionTextEl = document.getElementById("transcriptionText");
+const languageSelector = document.getElementById("languageSelector");
 
 function showTab(tabId) {
     document.querySelectorAll('.result-container').forEach(tab => tab.style.display = 'none');
@@ -24,7 +25,8 @@ async function translateText() {
         translationTextEl.innerText = "No transcription available to translate.";
         return;
     }
-    translationTextEl.innerText = await fetchData('/translate', transcription, translationTextEl, "spanish");
+    console.log(languageSelector.value);
+    translationTextEl.innerText = await fetchData('/translate', transcription, translationTextEl, languageSelector.value);
 }
 
 async function fetchData(url, text, resultElement, target_language = null) {

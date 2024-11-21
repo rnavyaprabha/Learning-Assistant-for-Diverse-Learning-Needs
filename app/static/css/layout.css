@@ -62,8 +62,33 @@
 }
 
 .button-container {
-    display: flex;                  /* Use flexbox to arrange items */
-    justify-content: space-between; /* Space between the two buttons */
-    align-items: center;            /* Center items vertically */
-    margin-bottom: 10px;           /* Space below the button container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+/* Language Selector */
+.language-selector {
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333333; /* Neutral text color */
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #ced4da; /* Subtle border */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.language-selector:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.language-selector:focus {
+    border-color: #0069d9;
+    outline: none;
+    box-shadow: 0 0 3px 2px rgba(0, 105, 217, 0.5);
 }
