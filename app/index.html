@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Assistant</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
 </head>
 <body>
     <h1>Learning Assistant</h1>
@@ -14,17 +16,17 @@
     </div>
 
     <div class="tabs">
-        <div class="tab active" onclick="showTab('transcribeTab')">Transcription</div>
-        <div class="tab" onclick="showTab('summarizeTab')">Summary</div>
-        <div class="tab" onclick="showTab('translateTab')">Translation</div>
+        <div class="tab active" data-tab="transcribeTab">Transcription</div>
+        <div class="tab" data-tab="summarizeTab">Summary</div>
+        <div class="tab" data-tab="translateTab">Translation</div>
     </div>
 
     <div id="transcribeTab" class="result-container" style="display: block;">
         <div class="icon-div">
-            <button class="icon-button" onclick="downloadText('transcriptionText', 'transcription.txt')" title="Download">
+            <button class="icon-button" id="downloadTranscriptButton" title="Download">
                 &#x2193; Download
             </button>
-            <input type="file" id="uploadTextFile" accept=".txt" style="display: none;" onchange="uploadText()">
+            <input type="file" id="uploadTextFile" accept=".txt" style="display: none;">
             <button class="icon-button" onclick="document.getElementById('uploadTextFile').click()" title="Upload">
                 &#x2191; Upload
             </button>
@@ -37,7 +39,7 @@
         <div class="button-container">
             <button class="action-button" id="summarizeButton">Summarize Text</button>
             <div class="icon-div">
-                <button class="icon-button" onclick="downloadText('summarizationText', 'summary.txt')" title="Download">
+                <button class="icon-button" id="downloadSummaryButton" title="Download">
                     &#x2193; Download
                 </button>
             </div>
@@ -47,11 +49,30 @@
     </div>
     
     <div id="translateTab" class="result-container">
-        <button class="action-button" id="translateButton" disabled>Translate Text</button>
+        <div class="button-container">
+            <div class="translation-controls">
+                <select id="languageSelector" class="language-selector">
+                    <option value="es">Spanish</option>
+                    <option value="hi">Hindi</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ar">Arabic</option>
+                    <option value="ja">Japanese</option>
+                    <!-- <option value="en">English</option> -->
+                </select>
+                <button class="action-button" id="translateButton">Translate Text</button>
+            </div>
+            <div class="icon-div">
+                <button class="icon-button" id="downloadTranslationButton" title="Download">
+                    &#x2193; Download
+                </button>
+            </div>
+        </div>
         <h3>Translation Result:</h3>
         <p class="result" id="translationText">No translation yet.</p>
     </div>
 
-    <script src="/static/scripts.js"></script>
+    <script type="module" src="/static/js/main.js"></script>
 </body>
 </html>
