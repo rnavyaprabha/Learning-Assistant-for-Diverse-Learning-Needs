@@ -31,11 +31,11 @@ def translate_text(text, target_language):
         print(f"An error occurred during translation: {e}")
         return None
 
-# Example usage
-input_text = "Hello, world!"  # Example English text
-target_language = "German"  # Desired target language
-translated_text = translate_text(input_text, target_language)
+# # Example usage
+# input_text = "Hello, world!"  # Example English text
+# target_language = "de"  # Desired target language
+# translated_text = translate_text(input_text, target_language)
 
-if translated_text:
-    print(f"Original text: {input_text}")
-    print(f"Translated text ({target_language}): {translated_text}")
+# if translated_text:
+#     print(f"Original text: {input_text}")
+#     print(f"Translated text ({target_language}): {translated_text}")
