@@ -24,8 +24,8 @@ def correct_grammar(text: str, max_tokens: int = 1500, temperature: float = 0.5)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that corrects grammar."},
-                {"role": "user", "content": f"Correct the grammar of the following text:\n\n{text}"}
+                {"role": "system", "content": "You are a helpful assistant that corrects grammar and factual errors without adding any introductory phrases."},
+                {"role": "user", "content": f"Correct the grammar and any incorrect information in the following text, and only return the corrected text without any additional phrases:\n\n{text}"}
             ],
             max_tokens=max_tokens,
             temperature=temperature
