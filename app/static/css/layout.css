@@ -8,7 +8,7 @@
 }
 
 .tab {
-    padding: 10px 20px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-bottom: none;
     background: #f9f9f9;
@@ -71,7 +71,7 @@
 
 /* Language Selector */
 .language-selector {
-    padding: 8px 12px;
+    padding: 8px;
     font-size: 1rem;
     font-weight: 500;
     color: #333333; /* Neutral text color */
