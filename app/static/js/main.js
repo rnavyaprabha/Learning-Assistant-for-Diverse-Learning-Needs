@@ -1,6 +1,6 @@
 import { startWebSocket, stopWebSocket, wsRecording} from './websocket.js';
 import { startTranscription, stopTranscription , isRecording} from './windowTranscribe.js';
-import { showTab, summarizeText, translateText } from './ui-handlers.js';
+import { showTab, summarizeText, translateText, generateNotes } from './ui-handlers.js';
 import { downloadText, uploadText } from './file-handlers.js';
 
 // Toggle recording on button click
@@ -18,6 +18,7 @@ document.getElementById('downloadTranslationButton').addEventListener('click', (
 // Event Listeners for summarize, translate and switch tab
 document.getElementById("summarizeButton").onclick = () => summarizeText();
 document.getElementById("translateButton").onclick = () => translateText();
+document.getElementById("notesButton").onclick = () => generateNotes();
 document.querySelectorAll('.tab').forEach(tab => {tab.onclick = function() {
         showTab(this.getAttribute('data-tab'));
     };
