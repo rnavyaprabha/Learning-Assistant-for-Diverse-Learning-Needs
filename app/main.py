@@ -3,13 +3,19 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 import os
 from services.Translation import translate_text
-from services.Transcription import transcribe_audio
+#from services.Transcription import transcribe_audio
 from services.Summarization import summarize_text
 from services.Correction import correct_grammar
 
 app = FastAPI()
+
+# Middleware for handling headers and trusted hosts
+app.add_middleware(ProxyHeadersMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
 # Load environment variables
 load_dotenv()
@@ -53,16 +59,16 @@ async def correction(request: SummarizeRequest):
     return {"corrected_text": corrected_text}
 
 # WebSocket endpoint for audio transcription
-@app.websocket("/ws/transcribe")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            message = await websocket.receive_json()
-            if message["type"] == "transcribe":
-                result = await transcribe_audio(websocket)
-                await websocket.send_json({"type": "result", "data": result})
-    except WebSocketDisconnect:
-        print("WebSocket disconnected")
-    except Exception as e:
-        await websocket.send_json({"type": "error", "message": str(e)})
+# @app.websocket("/ws/transcribe")
+# async def websocket_endpoint(websocket: WebSocket):
+#     await websocket.accept()
+#     try:
+#         while True:
+#             message = await websocket.receive_json()
+#             if message["type"] == "transcribe":
+#                 result = await transcribe_audio(websocket)
+#                 await websocket.send_json({"type": "result", "data": result})
+#     except WebSocketDisconnect:
+#         print("WebSocket disconnected")
+#     except Exception as e:
+#         await websocket.send_json({"type": "error", "message": str(e)})

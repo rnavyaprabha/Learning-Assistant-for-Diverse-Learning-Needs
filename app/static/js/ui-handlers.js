@@ -17,7 +17,7 @@ async function summarizeText() {
         summarizationTextEl.innerText = "No transcription available to summarize.";
         return;
     }
-    summarizationTextEl.innerText = await fetchData('/summarize', transcription, summarizationTextEl);
+    summarizationTextEl.innerText = await fetchData('/summarize/', transcription, summarizationTextEl);
 }
 
 async function translateText() {
@@ -27,7 +27,7 @@ async function translateText() {
         return;
     }
     console.log(languageSelector.value);
-    translationTextEl.innerText = await fetchData('/translate', transcription, translationTextEl, languageSelector.value);
+    translationTextEl.innerText = await fetchData('/translate/', transcription, translationTextEl, languageSelector.value);
 }
 
 async function generateNotes() {
@@ -36,7 +36,7 @@ async function generateNotes() {
         notesTextEl.innerText = "No transcription available to generate notes.";
         return;
     }
-    notesTextEl.innerText = await fetchData('/correction', transcription, notesTextEl);
+    notesTextEl.innerText = await fetchData('/correction/', transcription, notesTextEl);
 }
 async function fetchData(url, text, resultElement, target_language = null) {
     resultElement.innerText = url.includes('translate') ? "Translating..." :
