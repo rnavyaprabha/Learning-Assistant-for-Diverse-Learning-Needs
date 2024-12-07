@@ -25,14 +25,17 @@ app.mount("/static", StaticFiles(directory=os.path.dirname(__file__)+"/static/")
 async def read_root():
     return FileResponse(html_file_path)
 
-# Endpoint for Audio-to-Text transcription
+# WebSocket endpoint for audio transcription
 @app.websocket("/ws/transcribe")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     try:
+        # Run the transcription function
         await transcribe_audio(websocket)
     except WebSocketDisconnect:
         print("WebSocket connection closed")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
 
 # Define a Pydantic model for the input text
 class TranslateRequest(BaseModel):
