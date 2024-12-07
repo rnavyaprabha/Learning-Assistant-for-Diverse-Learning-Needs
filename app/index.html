@@ -19,6 +19,7 @@
         <div class="tab active" data-tab="transcribeTab">Transcription</div>
         <div class="tab" data-tab="summarizeTab">Summary</div>
         <div class="tab" data-tab="translateTab">Translation</div>
+        <div class="tab" data-tab="notesTab">Notes</div>
     </div>
 
     <div id="transcribeTab" class="result-container" style="display: block;">
@@ -37,7 +38,7 @@
     
     <div id="summarizeTab" class="result-container">
         <div class="button-container">
-            <button class="action-button" id="summarizeButton">Summarize Text</button>
+            <button class="action-button" id="summarizeButton">Summarize</button>
             <div class="icon-div">
                 <button class="icon-button" id="downloadSummaryButton" title="Download">
                     &#x2193; Download
@@ -61,7 +62,7 @@
                     <option value="ja">Japanese</option>
                     <!-- <option value="en">English</option> -->
                 </select>
-                <button class="action-button" id="translateButton">Translate Text</button>
+                <button class="action-button" id="translateButton">Translate</button>
             </div>
             <div class="icon-div">
                 <button class="icon-button" id="downloadTranslationButton" title="Download">
@@ -71,6 +72,19 @@
         </div>
         <h3>Translation Result:</h3>
         <p class="result" id="translationText">No translation yet.</p>
+    </div>
+        
+    <div id="notesTab" class="result-container">
+        <div class="button-container">
+            <button class="action-button" id="notesButton">Create Notes</button>
+            <div class="icon-div">
+                <button class="icon-button" id="downloadNotesButton" title="Download">
+                    &#x2193; Download
+                </button>
+            </div>
+        </div>
+        <h3>Class Notes:</h3>
+        <p class="result" id="notesText">No notes created yet.</p>
     </div>
 
     <script type="module" src="/static/js/main.js"></script>
