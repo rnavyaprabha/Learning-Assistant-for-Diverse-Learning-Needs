@@ -1,6 +1,7 @@
 const summarizationTextEl = document.getElementById("summarizationText");
 const translationTextEl = document.getElementById("translationText");
 const transcriptionTextEl = document.getElementById("transcriptionText");
+const notesTextEl = document.getElementById("notesText");
 const languageSelector = document.getElementById("languageSelector");
 
 function showTab(tabId) {
@@ -16,7 +17,7 @@ async function summarizeText() {
         summarizationTextEl.innerText = "No transcription available to summarize.";
         return;
     }
-    summarizationTextEl.innerText = await fetchData('/summarize', transcription, summarizationTextEl);
+    summarizationTextEl.innerText = await fetchData('/summarize/', transcription, summarizationTextEl);
 }
 
 async function translateText() {
@@ -26,11 +27,20 @@ async function translateText() {
         return;
     }
     console.log(languageSelector.value);
-    translationTextEl.innerText = await fetchData('/translate', transcription, translationTextEl, languageSelector.value);
+    translationTextEl.innerText = await fetchData('/translate/', transcription, translationTextEl, languageSelector.value);
 }
 
+async function generateNotes() {
+    const transcription = transcriptionTextEl.innerText;
+    if (!transcription.trim()) {
+        notesTextEl.innerText = "No transcription available to generate notes.";
+        return;
+    }
+    notesTextEl.innerText = await fetchData('/correction/', transcription, notesTextEl);
+}
 async function fetchData(url, text, resultElement, target_language = null) {
-    resultElement.innerText = url.includes('summarize') ? "Summarizing..." : "Translating...";
+    resultElement.innerText = url.includes('translate') ? "Translating..." :
+                         (url.includes('summarize') ? "Summarizing..." : "Generating...");
     resultElement.classList.add("loading");
     const bodyContent = target_language ? { text, target_language } : { text };
     try {
@@ -41,7 +51,7 @@ async function fetchData(url, text, resultElement, target_language = null) {
         });
         const data = await response.json();
         resultElement.classList.remove("loading");
-        return data.summary || data.translation || "No result available.";
+        return data.summary || data.translation || data.corrected_text || "No result available.";
     } catch (error) {
         resultElement.classList.remove("loading");
         console.error('Fetch Error:', error);
@@ -49,4 +59,4 @@ async function fetchData(url, text, resultElement, target_language = null) {
     }
 }
 
-export { showTab, summarizeText, translateText };
+export { showTab, summarizeText, translateText, generateNotes };
