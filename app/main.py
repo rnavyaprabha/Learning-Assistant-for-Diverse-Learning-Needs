@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 import os
 from .services.Translation import translate_text
 from .services.Transcription import transcribe_audio
@@ -10,6 +12,10 @@ from .services.Summarization import summarize_text
 from .services.Correction import correct_grammar
 
 app = FastAPI()
+
+# Middleware for handling headers and trusted hosts
+app.add_middleware(ProxyHeadersMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
 # Load environment variables
 load_dotenv()

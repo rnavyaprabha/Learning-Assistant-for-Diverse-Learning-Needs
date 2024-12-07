@@ -14,6 +14,7 @@ document.getElementById('uploadTextFile').addEventListener('change', () => uploa
 document.getElementById('downloadTranscriptButton').addEventListener('click', () => downloadText('transcriptionText', 'transcription.txt'));
 document.getElementById('downloadSummaryButton').addEventListener('click', () => downloadText('summarizationText', 'summary.txt'));
 document.getElementById('downloadTranslationButton').addEventListener('click', () => downloadText('translationText', 'translation.txt'));
+document.getElementById('downloadNotesButton').addEventListener('click', () => downloadText('notesText', 'notes.txt'));
 
 // Event Listeners for summarize, translate and switch tab
 document.getElementById("summarizeButton").onclick = () => summarizeText();
