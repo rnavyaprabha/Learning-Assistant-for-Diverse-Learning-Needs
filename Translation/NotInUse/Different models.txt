@@ -1,0 +1,9 @@
+ONMT: Variability between the different versions of the software, I.E. the exclusion of a built in preprocess function after version 1.2, makes it very difficult to build a working model with any confidence that it will be sustainable for any foreseeable future and not just cease functioning after the next software update.
+
+issues with uploaded model represent this, as it does not function specifically because of the use of the preprocess function
+
+FairSeq: Limited Language support
+
+issue with uploaded model is that it does not translate to other languages. Instead it just takes the input and presents the output as the same.
+
+FineTune: I was attempting to fine tune the model in order to improve its accuracy with more common languages.
