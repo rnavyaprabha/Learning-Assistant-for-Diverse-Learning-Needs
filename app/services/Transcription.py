@@ -1,65 +1,65 @@
-from deepgram import Deepgram
-import pyaudio
-import asyncio
-import threading
+from google.cloud import speech
+from dotenv import load_dotenv
+load_dotenv()
 
-# Deepgram API key
-DEEPGRAM_API_KEY = "2de3e9345d70fc5f096c62a924744275a4920e67"
+client = speech.SpeechAsyncClient()
 
-# Audio parameters
-RATE = 16000
-CHUNK = int(RATE / 10)  # 100ms
-
-# Initialize the Deepgram client
-dg_client = Deepgram(DEEPGRAM_API_KEY)
-
-# Asynchronous transcription using Deepgram
 async def transcribe_audio(websocket):
-    audio_interface = pyaudio.PyAudio()
-    stream = audio_interface.open(
-        format=pyaudio.paInt16,
-        channels=1,
-        rate=RATE,
-        input=True,
-        frames_per_buffer=CHUNK,
+
+    # Google Speech-to-Text configuration
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code="en-US",
+        max_alternatives=1,
+        enable_automatic_punctuation=True,  # Optional
     )
 
+    streaming_config = speech.StreamingRecognitionConfig(
+        config=config,
+        interim_results=True,
+    )
+
+    # Async generator to yield audio chunks
+    async def audio_generator():
+        print("Audio generator started...")
+        speech.StreamingRecognizeRequest(streaming_config=streaming_config)
+        try:
+            while True:
+                audio_chunk = await websocket.receive_bytes()  # Wait for raw audio data
+                print(f"Received audio chunk of size {len(audio_chunk)} bytes")
+                if len(audio_chunk) > 0:
+                    yield speech.RecognitionAudio(content=audio_chunk)
+                else:
+                    print("Received empty audio chunk!")
+        except Exception as e:
+            print(f"Audio generator stopped: {e}")
+            return
+
+    # Start streaming recognition
     try:
-        # Configure the Deepgram live transcription connection
-        async with dg_client.transcription.live(
-            {
-                "punctuate": True,  # Adds punctuation to the transcription
-                "interim_results": True,  # Provides interim results
-                "language": "en-US",  # Set language to English
-            }
-        ) as deepgram_socket:
-            print("Connected to Deepgram.")
+        print("Starting streaming recognition...")
+        
+        # Ensure the generator keeps yielding chunks
+        responses = await client.streaming_recognize(requests=audio_generator())
+        print("Streaming recognition initialized successfully...")
 
-            async def send_audio():
-                """Send audio data to Deepgram."""
-                while True:
-                    # Read audio data from the microphone
-                    audio_chunk = stream.read(CHUNK, exception_on_overflow=False)
-                    await deepgram_socket.send(audio_chunk)
-
-            # Start sending audio to Deepgram in the background
-            send_task = asyncio.create_task(send_audio())
-
-            # Process responses from Deepgram
-            async for response in deepgram_socket:
-                if response.get("channel") and response["channel"].get("alternatives"):
-                    transcription = response["channel"]["alternatives"][0]["transcript"]
-                    print(f"Transcription: {transcription}")
-
-                    # Send the transcription via WebSocket
-                    await websocket.send_json({"transcript": transcription})
-
-            # Ensure the sending task completes
-            await send_task
+        # Process responses
+        async for response in responses:
+            print(f"Processing response: {response}")
+            for result in response.results:
+                if result.is_final:
+                    print(f"Final transcript: {result.alternatives[0].transcript}")
+                    yield {
+                        "transcript": result.alternatives[0].transcript,
+                        "is_final": True,
+                    }
+                else:
+                    print(f"Partial transcript: {result.alternatives[0].transcript}")
+                    yield {
+                        "transcript": result.alternatives[0].transcript,
+                        "is_final": False,
+                    }
     except Exception as e:
         print(f"Error during transcription: {e}")
-    finally:
-        # Ensure the audio stream is closed
-        stream.stop_stream()
-        stream.close()
-        audio_interface.terminate()
+        yield {"error": str(e)}  # Send error back to client
