@@ -13,7 +13,7 @@ function showTab(tabId) {
 
 async function summarizeText() {
     const transcription = transcriptionTextEl.innerText;
-    if (!transcription.trim()) {
+    if (!transcription.trim()|| transcription === "No transcription yet.") {
         summarizationTextEl.innerText = "No transcription available to summarize.";
         return;
     }
@@ -22,7 +22,7 @@ async function summarizeText() {
 
 async function translateText() {
     const transcription = transcriptionTextEl.innerText;
-    if (!transcription.trim()) {
+    if (!transcription.trim()|| transcription === "No transcription yet.") {
         translationTextEl.innerText = "No transcription available to translate.";
         return;
     }
@@ -32,7 +32,7 @@ async function translateText() {
 
 async function generateNotes() {
     const transcription = transcriptionTextEl.innerText;
-    if (!transcription.trim()) {
+    if (!transcription.trim()|| transcription === "No transcription yet.") {
         notesTextEl.innerText = "No transcription available to generate notes.";
         return;
     }
