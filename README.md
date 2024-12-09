@@ -4,10 +4,11 @@ The **Learning Assistant** leverages **deep learning** to enhance accessibility 
 
 ---
 
-## Features
-- **Real-time Summarization**: Automatically condenses spoken or written content into concise summaries.
+## Key Features
+- **Real-time Speech-to-Text**: Captures real-time audio input and converts speech into text transcriptions.
+- **Summarization**: Generates concise summaries of the transcription provided.
 - **Translation**: Provides translations in multiple languages, improving accessibility for non-native speakers.
-- **Correction**: Assists with grammar and spelling improvements for clearer communication.
+- **Correction**: Assists with grammar and spelling improvements for clearer notes of the transcription.
 
 ---
 
