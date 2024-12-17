@@ -22,7 +22,7 @@ def summarize_text(text: str, max_tokens: int = 1500, temperature: float = 0.5) 
     """
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that summarizes text."},
                 {"role": "user", "content": f"Summarize the following text:\n\n{text}"}
