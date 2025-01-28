@@ -22,10 +22,10 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 load_dotenv()
 
 # Path to the HTML file
-html_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
+html_file_path = os.path.join(os.path.dirname(__file__), "index.html")
 
-# Serve static files (e.g., CSS, JavaScript)
-static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+# Serve static files
+static_dir = os.path.dirname(__file__)+"/static/"
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Root endpoint to serve the HTML file
