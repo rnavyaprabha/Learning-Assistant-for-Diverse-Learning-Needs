@@ -13,6 +13,10 @@
 
     <div class="recording-container">
         <button id="startRecordingButton">Start Recording</button>
+        <button class="icon-button" id="uploadTextButton" title="Upload">
+            &#x2191; Upload Text
+        </button>
+        <input type="file" id="uploadTextFile" accept=".txt" style="display: none;">
     </div>
 
     <div class="tabs">
@@ -27,12 +31,8 @@
             <button class="icon-button" id="downloadTranscriptButton" title="Download">
                 &#x2193; Download
             </button>
-            <input type="file" id="uploadTextFile" accept=".txt" style="display: none;">
-            <button class="icon-button" onclick="document.getElementById('uploadTextFile').click()" title="Upload">
-                &#x2191; Upload
-            </button>
         </div>
-        <h3>Transcription Result:</h3>
+        <h3 id="transcriptLabel">Transcription Result:</h3>
         <p class="result" id="transcriptionText">No transcription yet.</p>
     </div>
     

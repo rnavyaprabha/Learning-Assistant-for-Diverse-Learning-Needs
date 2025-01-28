@@ -10,6 +10,8 @@ function startTranscription() {
     recognition.start();
     startRecordingButton.innerText = "Stop Recording";
     startRecordingButton.style.backgroundColor = "#dc3545";
+    transcriptLabel.innerText = "Transcription Result:";
+    transcriptionTextEl.innerText = "Listening...";
     isRecording = true;
 }
 
@@ -18,6 +20,9 @@ function stopTranscription() {
     startRecordingButton.innerText = "Start Recording";
     startRecordingButton.style.backgroundColor = "#28a745";
     isRecording = false;
+    if (transcriptionTextEl.innerText === "Listening...") {
+        transcriptionTextEl.innerText = "No transcription available.";
+    }
 }
 
 // Handle Transcription Result
