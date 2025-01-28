@@ -1,39 +1,32 @@
 from transformers import pipeline
 
-# Define a function to load the appropriate translation model
-def get_translator(target_language):
-    models = {
-        'es': "Helsinki-NLP/opus-mt-en-es",
-        'hi': "Helsinki-NLP/opus-mt-en-hi",
-        'fr': "Helsinki-NLP/opus-mt-en-fr",
-        'de': "Helsinki-NLP/opus-mt-en-de",
-        'zh': "Helsinki-NLP/opus-mt-en-zh",
-        'ar': "Helsinki-NLP/opus-mt-en-ar",
-        'ja': "Helsinki-NLP/opus-mt-en-jap",
-        'en': "Helsinki-NLP/opus-mt-mul-en"
-    }
-    
-    model_name = models.get(target_language.lower())
-    
-    if not model_name:
-        raise ValueError(f"Translation model for '{target_language}' is not available.")
-    
-    return pipeline("translation", model=model_name)
+# Preload the translation models
+translators = {
+    'es': pipeline("translation", model="Helsinki-NLP/opus-mt-en-es"),
+    'hi': pipeline("translation", model="Helsinki-NLP/opus-mt-en-hi"),
+    'fr': pipeline("translation", model="Helsinki-NLP/opus-mt-en-fr"),
+    'de': pipeline("translation", model="Helsinki-NLP/opus-mt-en-de"),
+    'zh': pipeline("translation", model="Helsinki-NLP/opus-mt-en-zh")
+    # 'ar': pipeline("translation", model="Helsinki-NLP/opus-mt-en-ar"),
+    # 'ja': pipeline("translation", model="Helsinki-NLP/opus-mt-en-jap"),
+    # 'en': pipeline("translation", model="Helsinki-NLP/opus-mt-mul-en")
+}
 
 def translate_text(text, target_language):
-    """Translates text to language using a pre-trained model."""
+    """Translates text to the target language using preloaded models."""
     try:
-        print(target_language)
-        translator = get_translator(target_language)
+        translator = translators.get(target_language.lower())
+        if not translator:
+            raise ValueError(f"Translation model for '{target_language}' is not available.")
         result = translator(text)
         return result[0]['translation_text']
     except Exception as e:
         print(f"An error occurred during translation: {e}")
         return None
-    
+
 # Example usage
 input_text = "Bonjour le monde"  # Example French text
-translated_text = translate_text(input_text,'en')
+translated_text = translate_text(input_text, 'en')
 
 if translated_text:
     print(f"Original text: {input_text}")
