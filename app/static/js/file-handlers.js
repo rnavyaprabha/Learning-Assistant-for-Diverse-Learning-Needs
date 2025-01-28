@@ -16,9 +16,20 @@ function downloadText(elementId, filename) {
 }
 
 // Upload text file and display in transcription result
+function selectFile() {
+    if (startRecordingButton.innerText == "Start Recording") {
+        document.getElementById('uploadTextFile').click();
+    } else {
+        alert("Please stop recording before uploading a file.");
+    }
+}
+// Verify text uploaded
 function uploadText() {
     const fileInput = document.getElementById('uploadTextFile');
+    const uploadTextFile = document.getElementById('uploadTextFile');
+    const transcriptLabel = document.getElementById('transcriptLabel');
     const file = fileInput.files[0];
+    transcriptLabel.innerText = "Uploaded file: " + file.name;
     if (file && file.type === "text/plain") {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -29,8 +40,9 @@ function uploadText() {
             alert("An error occurred while reading the file.");
         };
         reader.readAsText(file);
+        uploadTextFile.value = "";
     } else {
         alert("Please upload a valid .txt file.");
     }
 }
-export { downloadText, uploadText };
+export { downloadText, selectFile, uploadText };
