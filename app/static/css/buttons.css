@@ -1,4 +1,19 @@
 /* buttons.css */
+#uploadTextButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #0069d9; /* Primary color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#uploadTextButton:hover {
+    background-color: #0150a4; /* Darker shade on hover */
+}
+
 #startRecordingButton {
     padding: 10px 20px;
     font-size: 1rem;

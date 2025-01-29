@@ -1,4 +1,5 @@
 const transcriptionTextEl = document.getElementById("transcriptionText");
+const startRecordingButton = document.getElementById("startRecordingButton");
 // SpeechRecognition Setup
 let isRecording = false; // Global state
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();

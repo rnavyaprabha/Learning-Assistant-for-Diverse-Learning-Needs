@@ -7,7 +7,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 import os
 from services.Translation import translate_text
-from services.Transcription import transcribe_audio
+#from services.Transcription import transcribe_audio
 #from services.Transcription_test import transcribe_audio
 from services.Summarization import summarize_text
 from services.Correction import correct_grammar
@@ -59,23 +59,24 @@ async def correction(request: SummarizeRequest):
     corrected_text = correct_grammar(request.text)
     return {"corrected_text": corrected_text}
 
+## Google API endpoint for audio transcription (not in use) ##
 # WebSocket endpoint for audio transcription
-@app.websocket("/ws/transcribe/")
-async def transcribe_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    print("WebSocket connected.")
-    try:
-        async for transcription in transcribe_audio(websocket):
-            print("transcription", transcription)
-            if transcription.get("error"):
-                # Handle error in transcription
-                await websocket.send_json({"error": transcription["error"]})
-            else:
-                # Send transcription result back to client
-                await websocket.send_json(transcription)
-    except Exception as e:
-        print(f"Error in WebSocket handler: {e}")
-        await websocket.send_json({"error": str(e)})
-    finally:
-        print("WebSocket connection closing.")
-        await websocket.close()
+# @app.websocket("/ws/transcribe/")
+# async def transcribe_endpoint(websocket: WebSocket):
+#     await websocket.accept()
+#     print("WebSocket connected.")
+#     try:
+#         async for transcription in transcribe_audio(websocket):
+#             print("transcription", transcription)
+#             if transcription.get("error"):
+#                 # Handle error in transcription
+#                 await websocket.send_json({"error": transcription["error"]})
+#             else:
+#                 # Send transcription result back to client
+#                 await websocket.send_json(transcription)
+#     except Exception as e:
+#         print(f"Error in WebSocket handler: {e}")
+#         await websocket.send_json({"error": str(e)})
+#     finally:
+#         print("WebSocket connection closing.")
+#         await websocket.close()

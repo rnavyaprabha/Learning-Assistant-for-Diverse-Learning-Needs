@@ -1,4 +1,4 @@
-import { startWebSocket, stopWebSocket, wsRecording} from './websocket.js';
+//import { startWebSocket, stopWebSocket, wsRecording} from './websocket.js';
 import { startTranscription, stopTranscription , isRecording} from './windowTranscribe.js';
 import { showTab, summarizeText, translateText, generateNotes } from './ui-handlers.js';
 import { downloadText, selectFile, uploadText } from './file-handlers.js';
