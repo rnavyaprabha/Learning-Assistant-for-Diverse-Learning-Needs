@@ -29,8 +29,8 @@ function uploadText() {
     const uploadTextFile = document.getElementById('uploadTextFile');
     const transcriptLabel = document.getElementById('transcriptLabel');
     const file = fileInput.files[0];
-    transcriptLabel.innerText = "Uploaded file: " + file.name;
     if (file && file.type === "text/plain") {
+        transcriptLabel.innerText = "Uploaded file: " + file.name;
         const reader = new FileReader();
         reader.onload = function(event) {
             const text = event.target.result;
