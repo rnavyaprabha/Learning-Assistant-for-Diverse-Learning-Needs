@@ -28,6 +28,7 @@ function uploadText() {
     const fileInput = document.getElementById('uploadTextFile');
     const uploadTextFile = document.getElementById('uploadTextFile');
     const transcriptLabel = document.getElementById('transcriptLabel');
+
     const file = fileInput.files[0];
     if (file && file.type === "text/plain") {
         transcriptLabel.innerText = "Uploaded file: " + file.name;
@@ -37,12 +38,22 @@ function uploadText() {
             document.getElementById("transcriptionText").innerText = text;
         };
         reader.onerror = function() {
-            alert("An error occurred while reading the file.");
+  
+           alertify.set('notifier', 'position', 'top-center'); 
+         alertify.error("An error occurred while reading the file.");
         };
         reader.readAsText(file);
         uploadTextFile.value = "";
+        errorMessage.style.display = "none";
     } else {
-        alert("Please upload a valid .txt file.");
+       
+         alertify.set('notifier', 'position', 'top-center'); 
+         alertify.error("❌ File upload failed! Please upload a valid .txt file format only.");
+         
+
+
+        
     }
 }
+
 export { downloadText, selectFile, uploadText };
