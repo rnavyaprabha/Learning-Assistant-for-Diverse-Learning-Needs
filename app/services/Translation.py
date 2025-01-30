@@ -11,7 +11,7 @@ headers = {"Authorization": "Bearer " + os.getenv("HF_KEY")}
 
 # API endpoint for translation
 def get_API_URL(target_language):
-    return f"https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-{target_language.lower()}"
+    return "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-"+ target_language.lower()
 
 def translate_text(text, target_language, retries=4, delay=5):
     API_URL = get_API_URL(target_language)
@@ -39,3 +39,16 @@ def translate_text(text, target_language, retries=4, delay=5):
         time.sleep(delay)  # Wait before retrying
 
     return "Translation failed. Please try again later."
+
+# from google.cloud import translate_v2 as translate
+
+# def translate_text(text, target_language):
+#     # Create a client
+#     client = translate.Client()  
+
+#     if isinstance(text, bytes):
+#         text = text.decode("utf-8")
+
+#     result = client.translate(text, target_language=target_language)
+
+#     return result["translatedText"]
