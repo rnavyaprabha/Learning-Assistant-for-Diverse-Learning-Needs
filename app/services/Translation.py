@@ -1,44 +1,41 @@
 import requests
 import os
+import time
 from dotenv import load_dotenv
 
-# Load environment variables from the .env file
+# Load environment variables
 load_dotenv()
 
 # using HF_KEY to authenticate
 headers = {"Authorization": "Bearer " + os.getenv("HF_KEY")}
 
-# Translation models
-translators = {
-    'es': "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-es",
-    'hi': "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-hi",
-    'fr': "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr",
-    'de': "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-de",
-    'zh': "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-zh"
-    # 'ar': https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-ar,
-    # 'ja': https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-jap,
-    # 'en': https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-mul-en
-}
-
 # API endpoint for translation
 def get_API_URL(target_language):
-    return "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-"+ target_language.lower()
+    return f"https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-{target_language.lower()}"
 
-def translate_text(text, target_language):
+def translate_text(text, target_language, retries=4, delay=5):
     API_URL = get_API_URL(target_language)
     payload = {"inputs": text}
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.json()[0]['translation_text']
 
-# from google.cloud import translate_v2 as translate
+    for attempt in range(retries):
+        response = requests.post(API_URL, headers=headers, json=payload)
 
-# def translate_text(text, target_language):
-#     # Create a client
-#     client = translate.Client()  
+        # Handle potential issues in response
+        if response.status_code != 200:
+            print(f"Error: Received status code {response.status_code}")
+            print(f"Response: {response.json()}")
+            time.sleep(delay)  # Wait before retrying
+            continue
 
-#     if isinstance(text, bytes):
-#         text = text.decode("utf-8")
+        try:
+            result = response.json()
+            if isinstance(result, list) and "translation_text" in result[0]:
+                return result[0]['translation_text']
+            else:
+                print(f"Unexpected response format: {result}")
+        except Exception as e:
+            print(f"JSON parsing error: {e}")
+        
+        time.sleep(delay)  # Wait before retrying
 
-#     result = client.translate(text, target_language=target_language)
-
-#     return result["translatedText"]
+    return "Translation failed. Please try again later."
