@@ -22,7 +22,7 @@ function stopTranscription() {
     startRecordingButton.style.backgroundColor = "#28a745";
     isRecording = false;
     if (transcriptionTextEl.innerText === "Listening...") {
-        transcriptionTextEl.innerText = "No transcription available.";
+        transcriptionTextEl.innerText = "No transcription yet.";
     }
 }
 
