@@ -12,13 +12,15 @@ The **Learning Assistant** leverages **deep learning** to enhance accessibility 
 
 ---
 
-## Setup for Summarization
+## Setup Enviroment Variables
 
-1. Add a `.env` file to the root directory.
-2. Include the following line in the `.env` file:
+1. Add a `.env` file to the app folder.
+2. Include the following the keys for OpenAI, Huggin Faces and Google Cloud:
    ```env
-   OPENAI_API_KEY=paste-your-key-here
-
+   OPENAI_API_KEY=paste-your-openai-key-here
+   HF_KEY=paste-your-hugginface-key-here
+   GOOGLE_APPLICATION_CREDENTIALS=past-json-folder-location-here
+   ```
 ---
 
 ## Steps for Deployment
