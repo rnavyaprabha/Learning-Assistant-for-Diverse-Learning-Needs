@@ -81,3 +81,9 @@ The **Learning Assistant** leverages **deep learning** to enhance accessibility 
 - **FastAPI**: For backend API development.
 - **Docker**: For containerization and portability.
 - **Google Cloud**: For scalable deployment using Cloud Run.
+
+### **Steps to run**
+1. cd app
+2. Create virtual environment
+3. venv\Scripts\activate
+4. uvicorn main:app --reload

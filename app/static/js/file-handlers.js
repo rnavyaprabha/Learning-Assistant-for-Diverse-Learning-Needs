@@ -20,7 +20,8 @@ function selectFile() {
     if (startRecordingButton.innerText == "Start Recording") {
         document.getElementById('uploadTextFile').click();
     } else {
-        alert("Please stop recording before uploading a file.");
+        alertify.set('notifier', 'position', 'top-center'); 
+        alertify.error("❌ Please stop recording before uploading a file.");
     }
 }
 // Verify text uploaded
